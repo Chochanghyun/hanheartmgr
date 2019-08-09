@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="euc-kr"?>
+<sqls>
+	<!-- 화면 리스트 -->
+	<statement id="getScreenList">
+	<![CDATA[
+	SELECT 'N' AS checked
+	     , scrn_type
+	     , scrn_url_addr
+	     , scrn_cd
+	     , scrn_nm
+	     , scrn_loc_flag
+	     , link_scrn_cd
+	     , use_yn
+	     , open_stat
+	     , width_sz
+	     , ht_sz
+	  FROM SZ.SMSMSCNI
+	 WHERE 1 = 1
+	]]>
+		<isNotEmpty property="srch_scrn_type">
+		<![CDATA[ 
+	   AND SCRN_TYPE = #srch_scrn_type#
+		]]>
+		</isNotEmpty >
+		<isNotEmpty property="srch_scrn_cd">
+		<![CDATA[
+	   AND SCRN_CD LIKE '%'||#srch_scrn_cd#||'%'
+		]]>
+		</isNotEmpty>
+		<isNotEmpty property="srch_scrn_nm">
+		<![CDATA[
+	   AND SCRN_NM LIKE '%'||#srch_scrn_nm#||'%'
+		]]>
+		</isNotEmpty>
+		<isNotEmpty property="srch_scrn_url">
+		<![CDATA[
+	   AND SCRN_URL_ADDR LIKE '%'||#srch_scrn_url#||'%'
+		]]>
+		</isNotEmpty>
+		<isNotEmpty property="srch_use_yn">
+		<![CDATA[
+	   AND USE_YN = #srch_use_yn#
+		]]>
+		</isNotEmpty>
+	 ORDER BY SCRN_TYPE, SCRN_CD
+	</statement>
+	
+	<statement id="insScreenInfo">
+	<![CDATA[
+	INSERT INTO SZ.SMSMSCNI
+				( SCRN_TYPE, SCRN_CD, SCRN_NM, SCRN_URL_ADDR, SCRN_LOC_FLAG
+				, USE_YN, OPEN_STAT, FST_RGSTR_ID, FST_RGST_TS, LAST_UPDTR_ID
+				, LAST_UPDT_TS, WIDTH_SZ, HT_SZ, LINK_SCRN_CD
+				)
+	VALUES (
+			  #scrn_type#
+			, #scrn_cd#
+			, #scrn_nm#
+			, #scrn_url_addr#
+			, #scrn_loc_flag#
+			, #use_yn#
+			, #open_stat#
+			, #%userid#
+			, SYSTIMESTAMP
+			, #%userid#
+			, SYSTIMESTAMP
+			, #width_sz#
+			, #ht_sz#
+			, NVL(#link_scrn_cd#,'')
+		  )
+	]]>
+	</statement>
+	
+	<statement id="setScreenInfo">
+	<![CDATA[
+	UPDATE SZ.SMSMSCNI
+	   SET SCRN_NM			= #scrn_nm#
+	     , SCRN_TYPE		= #scrn_type#
+	     , SCRN_URL_ADDR	= #scrn_url_addr#
+	     , SCRN_LOC_FLAG	= #scrn_loc_flag#
+	     , USE_YN			= #use_yn#
+	     , OPEN_STAT		= #open_stat#
+	     , LAST_UPDTR_ID	= #%userid#
+	     , LAST_UPDT_TS		= SYSTIMESTAMP
+	     , WIDTH_SZ			= #width_sz#
+	     , HT_SZ			= #ht_sz#
+	     , LINK_SCRN_CD		= NVL(#link_scrn_cd#, '')
+	 WHERE SCRN_CD = #scrn_cd#
+	]]>
+	</statement>
+	
+	<statement id="delScreenInfo">
+	DELETE FROM SZ.SMSMSCNI WHERE SCRN_CD = #scrn_cd#
+	</statement>
+</sqls>

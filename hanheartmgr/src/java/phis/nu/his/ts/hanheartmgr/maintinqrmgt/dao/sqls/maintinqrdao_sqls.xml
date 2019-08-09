@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="euc-kr"?>
+<sqls>
+	<!-- 콤보박스 유형 -->
+	<statement id="getBscd">
+            <![CDATA[
+              SELECT SUBSTR(cdid,1,2) gubn, cdid, cdnm
+              FROM COM.ZBCMCODE
+         where cdgrupid = 'CLNT0'
+         UNION ALL
+        SELECT distinct 'DEPT' gubn, CLNTDEPT  cdid, CLNTDEPT cdnm
+          FROM pam.gfmclntm
+         order by 1, 2
+            ]]>
+	</statement>
+	<statement id="getDeptTree">
+        <![CDATA[
+        SELECT  DISTINCT '1' depth, '%' mastcd, '' upmastcd, '전체' mastnm
+          FROM DUAL
+         WHERE #hs_kind# = 'DEPT'
+         UNION ALL
+        SELECT  DISTINCT '2' depth, SUBSTR(CLNTDEPT,1,1) mastcd, '%' upmastcd, SUBSTR(CLNTDEPT,1,1) mastnm
+          FROM PAM.GFMCLNTM
+         WHERE #hs_kind# = 'DEPT'
+           AND CLNTDEPT <> '-'
+         UNION ALL
+        SELECT DISTINCT '3' depth, CLNTDEPT mastcd, SUBSTR(CLNTDEPT,1,1) upmastcd, CLNTDEPT mastnm
+          FROM PAM.GFMCLNTM
+         WHERE #hs_kind# = 'DEPT'
+           AND CLNTDEPT <> '-'
+         UNION ALL
+        SELECT  DISTINCT '1' depth, '%' mastcd, '' upmastcd, '전체' mastnm
+          FROM DUAL
+         WHERE #hs_kind# = 'IP'
+         UNION ALL
+        SELECT  DISTINCT '2' depth, SUBSTR(CLNTUSIP,1,9) mastcd, '%' upmastcd, SUBSTR(CLNTUSIP,1,9) mastnm
+          FROM PAM.GFMCLNTM
+         WHERE #hs_kind# = 'IP'
+           AND CLNTUSIP NOT IN ('192.168.')
+         ORDER BY 2,1
+        ]]>
+	</statement>
+
+	<statement id="getMaintList">
+        <![CDATA[
+        SELECT NVL(clntgrup,' ')clntgrup, NVL(clntdept,' ')clntdept, NVL(clntuser,' ')clntuser,
+               NVL(clntusip,' ')clntusip,
+               NVL(clntfrdt,' ')clntfrdt, NVL(clnttodt,' ')clnttodt,
+               NVL(clntrpdt,' ')clntrpdt, NVL(clntstat,' ')clntstat, NVL(clntpcfd,' ')clntpcfd,
+               NVL(clntpclv,' ')clntpclv, NVL(clntmot1,' ')clntmot1, NVL(clntmot2,' ')clntmot2,
+               NVL(clntcpuz,' ')clntcpuz, NVL(clntmemz,' ')clntmemz, NVL(clntgrpz,' ')clntgrpz,
+               NVL(clntcard,' ')clntcard, NVL(clntusos,' ')clntusos, NVL(clntprg1,' ')clntprg1,
+               NVL(clntprg2,' ')clntprg2, NVL(clntprg3,' ')clntprg3, NVL(clntprg4,' ')clntprg4,
+               NVL(clntprg5,' ')clntprg5, NVL(clntmemo,' ')clntmemo, NVL(clntused,' ')clntused,
+               NVL(clntmem2,' ')clntmem2, NVL(clntetc1,' ')clntetc1, NVL(clntoems,' ')clntoems,
+               NVL(clntoscd,' ')clntoscd, NVL(clntchk1,' ')clntchk1, NVL(clntetc4,' ')clntetc4,
+               substr(clntusip,9,1) clntip03,
+               substr(clntusip,9,1)||TRIM(TO_CHAR(TO_NUMBER(substr(clntusip,11,3)),'000')) clntip04,
+               NVL(clntpidn,' ')clntpidn
+          FROM PAM.GFMCLNTM
+          WHERE clntstat != 'D' 
+           ]]>
+		<isNotEmpty property="hs_grup">
+           <![CDATA[
+           AND CLNTGRUP like '%'||#hs_grup#||'%'
+           ]]>
+		</isNotEmpty>
+		<isNotEmpty property="hs_dept">
+           <![CDATA[
+           AND CLNTDEPT like '%'||#hs_dept#||'%'
+           ]]>
+		</isNotEmpty>
+		<isNotEmpty property="hs_frip">
+           <![CDATA[
+           AND CLNTUSIP BETWEEN #hs_frip# AND #hs_toip#||'Z' 
+           ]]>
+		</isNotEmpty>
+		<isNotEmpty property="hs_user">
+           <![CDATA[
+           AND CLNTUSER like '%'||#hs_user#||'%'
+           ]]>
+		</isNotEmpty>
+		ORDER BY
+		clntgrup,substr(clntusip,9,1)||TO_CHAR(TO_NUMBER(substr(clntusip,11,3)),'000'),clntdept
+	</statement>
+	
+
+</sqls>

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="euc-kr"?>
+<sqls>
+    <!-- 콤보박스 미수 유형  -->
+    <statement id="misuTypeList">
+            <![CDATA[
+              SELECT '%' AS CDID, '전체' AS CDNM, 0 AS DISPSEQ FROM DUAL
+              UNION ALL
+              SELECT CDID, CDNM||'('||CDID||')' AS CDNM, DISPSEQ FROM COM.ZBCMCODE WHERE CDGRUPID='MS049'
+              ORDER BY 3,1,2
+            ]]>      
+    </statement>
+    
+    <statement id="getMisuList">
+            <![CDATA[
+              SELECT * FROM PAM.PUCUCMTM
+              WHERE UCMTYYMM BETWEEN #fromdd# AND #todd#
+            ]]>
+            <isNotEmpty property="srch_type">
+                <![CDATA[ 
+                    AND ucmtkind like '%'||#srch_type#||'%'
+                ]]>
+            </isNotEmpty >  
+            <isNotEmpty property="srch_yn">
+                <![CDATA[ 
+                    and ucmtedfg = #srch_yn#
+                ]]>
+            </isNotEmpty >
+    </statement>
+    
+    <statement id="getDepList">
+            <![CDATA[
+              select * from pam.pucuchsh
+              where uchsidno = #idno#
+              and uchsmddt = #mddt#
+            ]]>      
+    </statement>
+    
+    <statement id="insMisuInfo">
+            <![CDATA[
+                INSERT INTO PAM.PUCUCMTM
+                (
+                ucmtmddt,
+                ucmthpno,
+                ucmtidno,
+                ucmtuccd,
+                ucmtkind,
+                ucmtseqn,
+                ucmtname,
+                ucmteddt,
+                ucmtedfg,
+                ucmtmetp,
+                ucmtcano,
+                ucmtrcno,
+                UCMTUAMT,
+                UCMTSTMT,
+                UCMTYYMM,
+                UCMTTODT,
+                UCMTCONT,
+                UCMTCGYM,
+                UCMTUPDT,
+                UCMTUSER,
+                ucmtmymt,
+                UCMTBKMT,
+                UCMTCDMT,
+                UCMTSMUT,
+                UCMTJMUT,
+                UCMTDCMT,
+                UCMTADMT,
+                UCMTRTMT,
+                UCMTETMT,
+                ucmtcamt
+                )
+                VALUES
+                (
+                #ucmtmddt#,
+                '01',
+                #ucmtidno#,
+                #ucmtuccd#,
+                #ucmtkind#,
+                NVL(#ucmtseqn#, 0),
+                #ucmtname#,
+                #ucmteddt#,
+                #ucmtedfg#,
+                #ucmtmetp#,
+                #ucmtcano#,
+                #ucmtrcno#,
+                #ucmtuamt#,
+                #ucmtstmt#,
+                #ucmtyymm#,
+                #ucmttodt#,
+                #ucmtcont#,
+                #ucmtcgym#,
+                to_char(SYSDATE, 'YYYYMMDD'),
+                '40490',
+                NVL(#ucmtmymt#,0),
+                NVL(#ucmtbkmt#,0),
+                NVL(#ucmtcdmt#,0),
+                NVL(#ucmtsmut#,0),
+                NVL(#ucmtjmut#,0),
+                NVL(#ucmtdcmt#,0),
+                NVL(#ucmtadmt#,0),
+                NVL(#ucmtrtmt#,0),
+                NVL(#ucmtetmt#,0),
+                NVL(#ucmtcamt#,0)
+                )
+            ]]>      
+    </statement>
+    
+    <statement id="upMisuInfo">
+            <![CDATA[
+              SELECT '%' AS CDID, '전체' AS CDNM, 0 AS DISPSEQ FROM DUAL
+              UNION ALL
+              SELECT CDID, CDNM||'('||CDID||')' AS CDNM, DISPSEQ FROM COM.ZBCMCODE WHERE CDGRUPID='MS049'
+              ORDER BY 3,1,2
+            ]]>      
+    </statement>
+    
+    <statement id="delMisuInfo">
+    <![CDATA[
+        DELETE FROM PAM.PUCUCMTM
+        WHERE ucmtidno = #ucmtidno#
+        ]]>  
+    </statement> 
+</sqls>

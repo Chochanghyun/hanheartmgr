@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="euc-kr"?>
+<sqls>
+    <!-- 소속 조회 -->
+    <statement id="posUserList">
+            <![CDATA[
+              select USERID, USERNM, MIN(USERFROMDD) USERFRDD, MAX(USERTODD) USERTODD
+              FROM COM.ZSUMUSRB
+              WHERE 1=1
+            ]]>
+            <isNotEmpty property="srch_scrn_cd">
+                <![CDATA[ 
+                    AND POSDEPTCD like '%'||#srch_scrn_cd#||'%'
+                    GROUP BY USERNM, USERID
+                ]]>
+            </isNotEmpty >
+            
+    </statement>
+       
+    <statement id="dutUserList">    
+             <![CDATA[
+               SELECT
+                        a.USERNM AS USERNM
+                        ,a.USERID AS USERID
+                        ,b.FROMDD AS USERFRDD
+                        ,b.TODD AS USERTODD
+                  FROM COM.ZSUMUSRB a, COM.ZSUMUSRD b
+                 WHERE 2=2
+                   AND a.USERID = b.USERID
+                   AND a.USERTODD = b.TODD
+                   AND a.POSDEPTCD = b.DUTPLCECD
+                   AND a.POSINSTCD = b.DUTPLCEINSTCD
+                   AND to_char(SYSDATE, 'YYYYMMDD') between a.USERFROMDD and a.USERTODD
+                   AND b.PSNWORKYN='Y'
+            ]]>
+            <isNotEmpty property="srch_scrn_cd">
+                <![CDATA[ 
+                    AND a.DUTUNITCD like '%'||#srch_scrn_cd#||'%'
+                ]]>
+            </isNotEmpty >      
+      </statement> 
+        
+      <statement id = "deptUserList">  
+         <isEmpty property="srch_scrn_cd">
+           <![CDATA[
+                   SELECT
+                            a.USERNM AS USERNM
+                            ,a.USERID AS USERID
+                            ,a.USERFROMDD AS USERFRDD
+                            ,a.USERTODD AS USERTODD
+                      FROM COM.ZSUMUSRB a, COM.ZSDDDEPT b
+                     WHERE 3=3
+                       AND a.POSINSTCD = b.INSTCD
+                       AND a.POSDEPTCD = b.DEPTCD
+                ]]>
+                <isNotEmpty property="srch_scrn_cd">
+                    <![CDATA[ 
+                        AND b.DEPTHNGNM = '%'||#srch_scrn_nm#||'%'
+                    ]]>
+                </isNotEmpty >
+        </isEmpty>
+    </statement>
+    
+     <!-- 근무지 조회 -->
+    <statement id="getUserDutyHist">
+        <![CDATA[
+             SELECT
+                    a.DUTPLCEINSTCD
+                    ,c.DEPTHNGNM
+                    ,a.FROMDD
+                    ,a.TODD
+                    ,b.userid
+                    ,(SELECT CDNM FROM com.ZBCMCODE WHERE CDSID = a.JOBKINDCD) as JOBKINDCD
+                    ,(SELECT CDNM FROM com.ZBCMCODE WHERE CDSID = a.JOBPOSCD) as JOBPOSCD
+                    ,(SELECT CDNM FROM com.ZBCMCODE WHERE CDSID = a.JOBRESPCD) as JOBRESPCD
+             FROM COM.ZSUMUSRD a, COM.ZSUMUSRB b, COM.ZSDDDEPT c
+            WHERE a.USERID = b.USERID
+              AND a.FROMDD = b.USERTODD
+              AND b.POSINSTCD = c.INSTCD
+              AND b.POSDEPTCD = c.DEPTCD
+
+        AND a.USERID = #userid#
+        ORDER BY a.FROMDD, a.TODD 
+        ]]>
+    </statement>
+</sqls>

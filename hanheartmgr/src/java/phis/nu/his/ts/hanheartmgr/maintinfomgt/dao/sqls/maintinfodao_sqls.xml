@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="euc-kr"?>
+<sqls>
+	<!-- 콤보박스 유형 -->
+	<statement id="getBscd">
+            <![CDATA[
+              SELECT SUBSTR(cdid,1,2) gubn, cdid, cdnm
+              FROM COM.ZBCMCODE
+         where cdgrupid = 'CLNT0'
+         UNION ALL
+        SELECT distinct 'DEPT' gubn, CLNTDEPT  cdid, CLNTDEPT cdnm
+          FROM pam.gfmclntm
+         order by 1, 2
+            ]]>
+	</statement>
+
+	<statement id="getMaintList">
+        <![CDATA[
+        SELECT NVL(clntgrup,' ')clntgrup, NVL(clntdept,' ')clntdept, NVL(clntuser,' ')clntuser,
+               NVL(clntusip,' ')clntusip,
+               NVL(clntfrdt,' ')clntfrdt, NVL(clnttodt,' ')clnttodt,
+               NVL(clntrpdt,' ')clntrpdt, NVL(clntstat,' ')clntstat, NVL(clntpcfd,' ')clntpcfd,
+               NVL(clntpclv,' ')clntpclv, NVL(clntmot1,' ')clntmot1, NVL(clntmot2,' ')clntmot2,
+               NVL(clntcpuz,' ')clntcpuz, NVL(clntmemz,' ')clntmemz, NVL(clntgrpz,' ')clntgrpz,
+               NVL(clntcard,' ')clntcard, NVL(clntusos,' ')clntusos, NVL(clntprg1,' ')clntprg1,
+               NVL(clntprg2,' ')clntprg2, NVL(clntprg3,' ')clntprg3, NVL(clntprg4,' ')clntprg4,
+               NVL(clntprg5,' ')clntprg5, NVL(clntmemo,' ')clntmemo, NVL(clntused,' ')clntused,
+               NVL(clntmem2,' ')clntmem2, NVL(clntetc1,' ')clntetc1, NVL(clntoems,' ')clntoems,
+               NVL(clntoscd,' ')clntoscd, NVL(clntchk1,' ')clntchk1, NVL(clntetc4,' ')clntetc4,
+               substr(clntusip,9,1) clntip03,
+               substr(clntusip,9,1)||TRIM(TO_CHAR(TO_NUMBER(substr(clntusip,11,3)),'000')) clntip04,
+               NVL(clntpidn,' ')clntpidn
+          FROM PAM.GFMCLNTM
+          WHERE clntstat != 'D' 
+           ]]>
+		<isNotEmpty property="hs_grup">
+           <![CDATA[
+           AND CLNTGRUP like '%'||#hs_grup#||'%'
+           ]]>
+		</isNotEmpty>
+		<isNotEmpty property="hs_dept">
+           <![CDATA[
+           AND CLNTDEPT like '%'||#hs_dept#||'%'
+           ]]>
+		</isNotEmpty>
+		<isNotEmpty property="hs_frip">
+           <![CDATA[
+           AND CLNTUSIP BETWEEN #hs_frip# AND #hs_toip#||'Z' 
+           ]]>
+		</isNotEmpty>
+		<isNotEmpty property="hs_user">
+           <![CDATA[
+           AND CLNTUSER like '%'||#hs_user#||'%'
+           ]]>
+		</isNotEmpty>
+		ORDER BY
+		clntgrup,substr(clntusip,9,1)||TO_CHAR(TO_NUMBER(substr(clntusip,11,3)),'000'),clntdept
+	</statement>
+
+	<statement id="insMaintInfo">
+        <![CDATA[
+        INSERT INTO PAM.GFMCLNTM (
+                CLNTHPNO
+               ,CLNTMDDT
+               ,CLNTIDNO
+               ,CLNTUCCD
+               ,CLNTKIND
+               ,CLNTSEQN
+               ,CLNTNAME
+               ,CLNTEDDT
+               ,CLNTEDFG
+               ,CLNTMETP
+               ,CLNTCANO
+               ,CLNTRCNO
+               ,CLNTUAMT
+               ,CLNTSTMT
+               ,CLNTYYMM
+               ,CLNTFRDT
+               ,CLNTTODT
+               ,CLNTCONT
+               ,CLNTCGYM
+               ,CLNTUPDT
+               ,CLNTUSER
+               ,CLNTMYMT
+               ,CLNTBKMT
+               ,CLNTCDMT
+               ,CLNTSMUT
+               ,CLNTJMUT
+               ,CLNTDCMT
+               ,CLNTADMT
+               ,CLNTRTMT
+               ,CLNTETMT
+               ,CLNTCAMT
+               ) VALUES (
+                '01'
+               ,#clntmddt#
+               ,#clntidno#
+               ,#clntuccd#
+               ,#clntkind#
+               ,#clntseqn#
+               ,#clntname#
+               ,#clnteddt#
+               ,#clntedfg#
+               ,#clntmetp#
+               ,#clntcano#
+               ,#clntrcno#
+               ,#clntuamt#
+               ,#clntstmt#
+               ,#clntyymm#
+               ,#clntfrdt#
+               ,#clnttodt#
+               ,#clntcont#
+               ,#clntcgym#
+               ,to_char(SYSDATE, 'YYYYMMDD')
+               ,#clntuser#
+               ,NVL(#clntmymt#,0)
+               ,NVL(#clntbkmt#,0)
+               ,NVL(#clntcdmt#,0)
+               ,NVL(#clntsmut#,0)
+               ,NVL(#clntjmut#,0)
+               ,NVL(#clntdcmt#,0)
+               ,NVL(#clntadmt#,0)
+               ,NVL(#clntrtmt#,0)
+               ,NVL(#clntetmt#,0)
+               ,NVL(#clntcamt#,0)
+               )
+        ]]>
+	</statement>
+
+	<statement id="setMaintInfo">
+        <![CDATA[
+        UPDATE PAM.GFMCLNTM
+           SET clntyymm = #clntyymm#
+             , clntidno = #clntidno#
+             , clntname = #clntname#
+             , clntuamt = #clntuamt#
+             , clntuccd = #clntuccd#
+             , clntfrdt = #clntfrdt#
+             , clnttodt = #clnttodt#
+             , clntkind = #clntkind#
+             , clnteddt = #clnteddt#
+             , clntmetp = #clntmetp#
+             , clntrcno = #clntrcno#
+             , clntcano = #clntcano#
+             , clntstmt = #clntstmt#
+             , clntmymt = NVL(#clntmymt#,0)
+             , clntbkmt = NVL(#clntbkmt#,0)
+             , clntcdmt = NVL(#clntcdmt#,0)
+             , clntdcmt = NVL(#clntdcmt#,0)
+             , clntadmt = NVL(#clntadmt#,0)
+             , clntrtmt = NVL(#clntrtmt#,0)
+             , clntetmt = NVL(#clntetmt#,0)
+             , clntmddt = #clntmddt#
+             , clntcont = #clntcont#
+             , clntcgym = #clntcgym#
+             , clntedfg = #clntedfg#
+             , clntupdt = to_char(SYSDATE, 'YYYYMMDD')
+             , clntuser = #clntuser#
+             , clntcamt = NVL(#clntcamt#,0)
+       WHERE clntmddt = #clntmddt#
+         AND clntidno = #clntidno#
+         AND clntuccd = #clntuccd#
+         AND clntkind = #clntkind#
+         AND clntseqn = #clntseqn#
+        ]]>
+	</statement>
+
+</sqls>

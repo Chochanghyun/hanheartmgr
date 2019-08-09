@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="euc-kr"?>
+<sqls>
+    <statement id="getSubmitList">
+        <![CDATA[
+        SELECT svc_cd -- 서비스코드 
+             , svc_nm -- 서비스명 
+             , scrn_cd -- 화면코드 
+             , app_nm -- app명 
+             , method_nm -- 메소드명 
+             , acs_auth_trgt_yn -- 접근권한대상여부 
+             , acs_auth_appl_yn -- 접근권한적용여부 
+             , open_stat -- 공개상태 
+             , use_yn -- 사용여부 
+             , fst_rgstr_id -- 최초등록자id 
+             , fst_rgst_ts -- 최초등록일시 
+             , last_updtr_id -- 최종수정자id 
+             , last_updt_ts -- 최종수정일시 
+             , trans_yn     -- UserTransaction사용FLAG
+        FROM SZ.SMSMSVCI
+        WHERE 1 = 1
+        ]]>
+        <isNotEmpty property="svc_cd">
+           <![CDATA[
+           AND svc_cd like '%'||#svc_cd#||'%'
+           ]]>
+        </isNotEmpty>
+        <isNotEmpty property="app_nm">
+           <![CDATA[
+           AND app_nm like '%'||#app_nm#||'%'
+           ]]>
+        </isNotEmpty>
+        <isNotEmpty property="scrn_cd">
+           <![CDATA[
+           AND scrn_cd like '%'||#scrn_cd#||'%'
+           ]]>
+        </isNotEmpty>
+            order by app_nm, svc_cd
+    </statement>
+    <statement id="insSubmitInfo">
+    <![CDATA[
+        INSERT INTO SZ.SMSMSVCI
+               (svc_cd, 
+                svc_nm, 
+                scrn_cd, 
+                app_nm, 
+                method_nm, 
+                acs_auth_trgt_yn, 
+                acs_auth_appl_yn, 
+                open_stat, 
+                use_yn, 
+                fst_rgstr_id, 
+                fst_rgst_ts, 
+                last_updtr_id, 
+                last_updt_ts,
+                trans_yn)
+        VALUES (#svc_cd#, 
+                #svc_nm#, 
+                #scrn_cd#, 
+                #app_nm#, 
+                #method_nm#, 
+                #acs_auth_trgt_yn#, 
+                #acs_auth_appl_yn#, 
+                #open_stat#, 
+                #use_yn#, 
+                #%userid#, 
+                SYSTIMESTAMP, 
+                #%userid#, 
+                SYSTIMESTAMP,
+                #trans_yn#)
+        ]]>
+    </statement>
+    
+    <statement id="setSubmitInfo">
+    <![CDATA[
+        UPDATE SZ.SMSMSVCI
+           SET svc_nm = #svc_nm#, 
+               scrn_cd = #scrn_cd#, 
+               app_nm = #app_nm#, 
+               method_nm = #method_nm#, 
+               acs_auth_trgt_yn = #acs_auth_trgt_yn#, 
+               acs_auth_appl_yn = #acs_auth_appl_yn#, 
+               open_stat = #open_stat#, 
+               use_yn = #use_yn#, 
+               last_updtr_id = #%userid#, 
+               last_updt_ts = SYSTIMESTAMP,
+               trans_yn = #trans_yn#
+         WHERE svc_cd = #svc_cd#
+    ]]>
+    </statement>
+    
+    <statement id="delSubmitInfo">
+        DELETE FROM SZ.SMSMSVCI
+         WHERE svc_cd = #svc_cd#
+    </statement> 
+</sqls>

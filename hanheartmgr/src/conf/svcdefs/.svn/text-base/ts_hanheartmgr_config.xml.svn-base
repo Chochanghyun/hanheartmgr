@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='euc-kr'?>
+<services module="ts_hanheartmgr" package="phis.nu.his.ts.hanheartmgr">
+    <service name="SubmitInfoMgt"
+             interface="${package}.submitinfomgt.SubmitInfoMgt"
+             class="${package}.submitinfomgt.SubmitInfoMgtImpl">
+        <property name="submitInfoDAO" ref="SubmitInfoDAO" />
+    </service>
+    <service name="SubmitInfoDAO"
+             interface="${package}.submitinfomgt.dao.SubmitInfoDAO"
+             class="${package}.submitinfomgt.dao.SubmitInfoDAOImpl">
+        <property name="sql" value="sqls/submitinfodao_sqls.xml" />
+        <property name="datasource" ref="jdbc.szdb" />
+    </service>
+</services>

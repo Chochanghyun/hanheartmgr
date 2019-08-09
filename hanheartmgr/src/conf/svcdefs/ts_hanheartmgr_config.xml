@@ -1,0 +1,69 @@
+<?xml version='1.0' encoding='euc-kr'?>
+<services module="ts_hanheartmgr" package="phis.nu.his.ts.hanheartmgr">
+    <service name="SubmitInfoMgt"
+             interface="${package}.submitinfomgt.SubmitInfoMgt"
+             class="${package}.submitinfomgt.SubmitInfoMgtImpl">
+        <property name="submitInfoDAO" ref="SubmitInfoDAO" />
+    </service>
+    <service name="SubmitInfoDAO"
+             interface="${package}.submitinfomgt.dao.SubmitInfoDAO"
+             class="${package}.submitinfomgt.dao.SubmitInfoDAOImpl">
+        <property name="sql" value="sqls/submitinfodao_sqls.xml" />
+        <property name="datasource" ref="jdbc.szdb" />
+    </service>
+    <service name="ScreenInfoMgt"
+             interface="${package}.screeninfomgt.ScreenInfoMgt"
+             class="${package}.screeninfomgt.ScreenInfoMgtImpl">
+        <property name="screenInfoDAO" ref="ScreenInfoDAO" />
+    </service>
+    <service name="ScreenInfoDAO"
+             interface="${package}.screeninfomgt.dao.ScreenInfoDAO"
+             class="${package}.screeninfomgt.dao.ScreenInfoDAOImpl">
+        <property name="sql" value="sqls/screeninfodao_sqls.xml" />
+        <property name="datasource" ref="jdbc.szdb" />
+    </service>
+    <service name="UserInqrMgt"
+             interface="${package}.userinqrmgt.UserInqrMgt"
+             class="${package}.userinqrmgt.UserInqrMgtImpl">
+        <property name="userInqrDAO" ref="UserInqrDAO" />
+    </service>
+    <service name="UserInqrDAO"
+             interface="${package}.userinqrmgt.dao.UserInqrDAO"
+             class="${package}.userinqrmgt.dao.UserInqrDAOImpl">
+        <property name="sql" value="sqls/userinqrdao_sqls.xml" />
+        <property name="datasource" ref="jdbc.szdb" />
+    </service>
+    <service name="MisuInfoMgt"
+             interface="${package}.misuinfomgt.MisuInfoMgt"
+             class="${package}.misuinfomgt.MisuInfoMgtImpl">
+        <property name="misuInfoDAO" ref="MisuInfoDAO" />
+    </service>
+    <service name="MisuInfoDAO"
+             interface="${package}.misuinfomgt.dao.MisuInfoDAO"
+             class="${package}.misuinfomgt.dao.MisuInfoDAOImpl">
+        <property name="sql" value="sqls/misuinfodao_sqls.xml" />
+        <property name="datasource" ref="jdbc.szdb" />
+    </service>
+    <service name="MaintInfoMgt"
+             interface="${package}.maintinfomgt.MaintInfoMgt"
+             class="${package}.maintinfomgt.MaintInfoMgtImpl">
+        <property name="maintInfoDAO" ref="MaintInfoDAO" />
+    </service>
+    <service name="MaintInfoDAO"
+             interface="${package}.maintinfomgt.dao.MaintInfoDAO"
+             class="${package}.maintinfomgt.dao.MaintInfoDAOImpl">
+        <property name="sql" value="sqls/maintinfodao_sqls.xml" />
+        <property name="datasource" ref="jdbc.szdb" />
+    </service>
+    <service name="MaintInqrMgt"
+             interface="${package}.maintinqrmgt.MaintInqrMgt"
+             class="${package}.maintinqrmgt.MaintInqrMgtImpl">
+        <property name="maintInqrDAO" ref="MaintInqrDAO" />
+    </service>
+    <service name="MaintInqrDAO"
+             interface="${package}.maintinqrmgt.dao.MaintInqrDAO"
+             class="${package}.maintinqrmgt.dao.MaintInqrDAOImpl">
+        <property name="sql" value="sqls/maintinqrdao_sqls.xml" />
+        <property name="datasource" ref="jdbc.szdb" />
+    </service>
+</services>
